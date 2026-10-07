@@ -94,20 +94,33 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Running the SOC Dashboard & REST API
+### Running the Cyber SOC Frontend & REST API
 
+#### Option A: One-Click Unified Launcher (Recommended)
+```powershell
+# PowerShell
+.\start_all.ps1
+
+# Or Windows Command Prompt
+start_all.bat
+```
+This automatically starts both the **FastAPI REST Backend** (`http://127.0.0.1:8000`) and the **React + Vite Cyber SOC Frontend** (`http://localhost:5173`).
+
+#### Option B: Individual Service Launchers
 ```bash
-# 1. Start the decoupled FastAPI REST Backend (Port 8000)
-python -m uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload
+# 1. Start FastAPI REST Backend (Port 8000)
+python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
 
-# 2. Launch the Streamlit Cyber SOC Dashboard
-python -m streamlit run dashboard.py
+# 2. Start React + Vite Cyber SOC Frontend (Port 5173)
+cd frontend
+npm run dev
 
-# 3. Run the automated test suite (98 tests passing)
+# 3. Run Automated Pytest Suite (98 tests passing 100%)
 python -m pytest tests/ -v
 ```
 
-Interactive REST API documentation is available at `http://localhost:8000/docs`.
+- **Interactive Cyber SOC Dashboard**: `http://localhost:5173`
+- **FastAPI Interactive Documentation (Swagger)**: `http://127.0.0.1:8000/docs`
 
 ---
 

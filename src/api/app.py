@@ -30,6 +30,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
         "http://localhost:8501",
         "http://127.0.0.1:8501",
         "http://localhost:3000",
@@ -196,7 +198,7 @@ def get_latest_telemetry():
 
 
 @app.get("/api/telemetry/history")
-def get_telemetry_history(limit: int = Query(100, ge=10, le=1000), session_id: Optional[int] = None):
+def get_telemetry_history(limit: int = Query(100, ge=1, le=1000), session_id: Optional[int] = None):
     """
     Return recent telemetry trajectory history for charts and mapping.
     """
@@ -210,8 +212,10 @@ def get_telemetry_history(limit: int = Query(100, ge=10, le=1000), session_id: O
         tail = filtered.tail(limit)
         records = []
         for _, row in tail.iterrows():
+            ts = str(row.get("timestamp_gnss") or row.get("timestamp_pc"))
             records.append({
-                "timestamp": str(row.get("timestamp_gnss") or row.get("timestamp_pc")),
+                "timestamp": ts,
+                "timestamp_utc": ts,
                 "epoch_id": int(row.get("epoch_id", 0)),
                 "session_id": int(row.get("session_id", 0)),
                 "latitude": float(row.get("latitude", 0.0)),
